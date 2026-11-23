@@ -101,8 +101,17 @@
 				  } ),
 			el(
 				'details',
-				{ className: 'flib-seo-avance', open: !! ( meta[ M + 'canonique' ] || meta[ M + 'image' ] ) },
+				{ className: 'flib-seo-avance', open: !! ( meta[ M + 'canonique' ] || meta[ M + 'image' ] || meta[ M + 'plan_masque' ] ) },
 				el( 'summary', null, __( 'Options avancées', 'flib-seo' ) ),
+				el( CheckboxControl, {
+					label: __( 'Masquer du plan du site', 'flib-seo' ),
+					help: __( 'Retiré de la page « Plan du site » seulement, toujours visible dans Google.', 'flib-seo' ),
+					checked: '1' === meta[ M + 'plan_masque' ],
+					onChange: function ( v ) {
+						maj( 'plan_masque', v ? '1' : null );
+					},
+					__nextHasNoMarginBottom: true,
+				} ),
 				el( TextControl, {
 					label: __( 'URL canonique', 'flib-seo' ),
 					type: 'url',

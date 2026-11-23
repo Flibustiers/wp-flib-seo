@@ -26,6 +26,7 @@ final class Flib_SEO_Admin {
 			'general'      => __( 'Titres et descriptions', 'flib-seo' ),
 			'indexation'   => __( 'Indexation', 'flib-seo' ),
 			'entreprise'   => __( 'Entreprise', 'flib-seo' ),
+			'plan'         => __( 'Plan du site', 'flib-seo' ),
 			'ariane'       => __( 'Fil d’Ariane', 'flib-seo' ),
 			'ia'           => __( 'IA (GEO)', 'flib-seo' ),
 			'redirections' => __( 'Redirections', 'flib-seo' ),
@@ -75,6 +76,7 @@ final class Flib_SEO_Admin {
 		);
 		if ( $ici ) {
 			wp_enqueue_style( 'flib-seo-fil-ariane' );
+			wp_enqueue_style( 'flib-seo-plan-site' );
 		}
 	}
 
@@ -319,6 +321,47 @@ final class Flib_SEO_Admin {
 		self::champ( $o, 'faq', __( 'FAQ', 'flib-seo' ), array( 'case' => __( 'Transformer les blocs « Détails » en questions-réponses (FAQPage)', 'flib-seo' ) ) );
 		self::champ( $o, 'articles', __( 'Articles', 'flib-seo' ), array( 'case' => __( 'Baliser les articles (auteur, dates de publication et de mise à jour)', 'flib-seo' ) ) );
 		self::fin_formulaire();
+	}
+
+	private static function onglet_plan() {
+		$o = 'plan';
+		echo '<div class="flib-seo-encart"><h2>' . esc_html__( 'Plan du site pour les visiteurs', 'flib-seo' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Le plan du site XML (wp-sitemap.xml) sert aux moteurs. Celui-ci est une page lisible par les visiteurs, souvent liée depuis le pied de page. Les contenus masqués de Google n’y figurent pas.', 'flib-seo' ) . '</p>';
+		echo '<p>' . wp_kses_post( __( 'Créer une page « Plan du site » et y insérer le bloc <strong>« Plan du site »</strong> (colonnes, titres, couleurs et taille réglables dans la barre latérale), ou le shortcode :', 'flib-seo' ) ) . '</p>';
+		echo '<p><code class="flib-seo-copier">[flib_plan_site]</code> <code class="flib-seo-copier">[flib_plan_site ordre="service,page,post" regrouper="oui" tri="titre" libelles="post:Actualités" exclure="12,34" exclure_termes="interne" colonnes="3"]</code></p>';
+		echo '<p class="description">' . esc_html__( 'Attributs disponibles : types, taxonomies, ordre, regrouper (oui/non), tri (defaut, titre, date, modif), libelles, exclure (identifiants de contenus, visibles dans l’adresse de modification : post=123), exclure_termes (slugs ou identifiants), articles, colonnes, titres (oui/non), niveau (2 = h2), class. Attributs absents : réglages ci-dessous.', 'flib-seo' ) . '</p></div>';
+		$types = array_map( static fn( $t ) => $t->labels->name, Flib_SEO_Options::types() );
+		$taxos = array_map( static fn( $t ) => $t->labels->name, Flib_SEO_Options::taxonomies() );
+		self::debut_formulaire( $o );
+		self::champ( $o, 'types', __( 'Contenus affichés', 'flib-seo' ), array( 'choix' => $types, 'aide' => __( 'Les types non indexés (onglet Indexation) sont ignorés. Les pages gardent leur arborescence.', 'flib-seo' ) ) );
+		self::champ( $o, 'taxos', __( 'Taxonomies affichées', 'flib-seo' ), array( 'choix' => $taxos ) );
+		self::champ( $o, 'ordre', __( 'Ordre des rubriques', 'flib-seo' ), array( 'classe' => 'large-text', 'placeholder' => 'service, page, category, post', 'aide' => __( 'Identifiants des types et taxonomies (entre parenthèses ci-dessus), dans l’ordre voulu. Les rubriques non citées suivent.', 'flib-seo' ) ) );
+		self::champ( $o, 'libelles', __( 'Noms des rubriques', 'flib-seo' ), array( 'classe' => 'large-text', 'placeholder' => 'post:Nos actualités, page:Le cabinet', 'aide' => __( 'Vide : nom du type ou de la taxonomie.', 'flib-seo' ) ) );
+		self::champ( $o, 'regrouper', __( 'Classer par catégorie', 'flib-seo' ), array( 'case' => __( 'Ranger les articles et les contenus non hiérarchiques sous leur catégorie', 'flib-seo' ), 'aide' => __( 'Catégories pour les articles ; pour un type personnalisé, sa première taxonomie hiérarchique.', 'flib-seo' ) ) );
+		self::champ( $o, 'tri', __( 'Tri', 'flib-seo' ), array( 'choix' => Flib_SEO_Plan_Site::tris() ) );
+		self::champ( $o, 'articles', __( 'Nombre maximal par type', 'flib-seo' ), array( 'classe' => 'small-text', 'aide' => __( 'Pour les articles et les autres contenus non hiérarchiques (les plus récents d’abord).', 'flib-seo' ) ) );
+		self::champ( $o, 'exclure', __( 'Contenus exclus', 'flib-seo' ), array( 'placeholder' => '12, 34', 'aide' => __( 'Identifiants séparés par des virgules. Les sous-pages d’une page exclue remontent d’un niveau. Pour masquer un contenu au cas par cas : case « Masquer du plan du site » dans l’éditeur (options avancées du panneau Référencement).', 'flib-seo' ) ) );
+		self::champ( $o, 'exclure_termes', __( 'Catégories exclues', 'flib-seo' ), array( 'placeholder' => 'actus-internes, 8', 'aide' => __( 'Slugs ou identifiants de catégories ou de termes : ils disparaissent du plan avec leurs contenus.', 'flib-seo' ) ) );
+		self::champ(
+			$o,
+			'colonnes',
+			__( 'Colonnes', 'flib-seo' ),
+			array(
+				'choix' => array(
+					'1' => '1',
+					'2' => '2',
+					'3' => '3',
+					'4' => '4',
+				),
+				'aide'  => __( 'Une seule colonne sur mobile.', 'flib-seo' ),
+			)
+		);
+		self::champ( $o, 'titres', __( 'Titres des rubriques', 'flib-seo' ), array( 'case' => __( 'Afficher « Pages », « Articles »… au-dessus de chaque liste', 'flib-seo' ) ) );
+		self::fin_formulaire();
+		$apercu = Flib_SEO_Plan_Site::html( array(), 'class="flib-plan-site"' );
+		if ( '' !== $apercu ) {
+			echo '<h2>' . esc_html__( 'Aperçu', 'flib-seo' ) . '</h2><div class="flib-seo-encart">' . $apercu . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML échappé dans html().
+		}
 	}
 
 	private static function onglet_ariane() {

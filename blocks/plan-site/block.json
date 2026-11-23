@@ -1,0 +1,91 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "flib-seo/plan-site",
+	"title": "Plan du site",
+	"category": "widgets",
+	"icon": "networking",
+	"description": "Liste des pages et contenus du site, pour une page « Plan du site ». Les contenus masqués de Google n’y figurent pas.",
+	"keywords": [
+		"plan du site",
+		"sitemap",
+		"pages",
+		"seo"
+	],
+	"textdomain": "flib-seo",
+	"attributes": {
+		"types": {
+			"type": "string",
+			"default": ""
+		},
+		"taxonomies": {
+			"type": "string",
+			"default": ""
+		},
+		"colonnes": {
+			"type": "string",
+			"default": ""
+		},
+		"titres": {
+			"type": "string",
+			"enum": [
+				"defaut",
+				"oui",
+				"non"
+			],
+			"default": "defaut"
+		},
+		"ordre": {
+			"type": "string",
+			"default": ""
+		},
+		"tri": {
+			"type": "string",
+			"default": ""
+		},
+		"regrouper": {
+			"type": "string",
+			"enum": [
+				"defaut",
+				"oui",
+				"non"
+			],
+			"default": "defaut"
+		},
+		"exclure": {
+			"type": "string",
+			"default": ""
+		},
+		"exclureTermes": {
+			"type": "string",
+			"default": ""
+		},
+		"libelles": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		],
+		"color": {
+			"text": true,
+			"background": true,
+			"link": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"blockGap": false
+		}
+	},
+	"editorScript": "flib-seo-plan-site-editeur",
+	"style": "flib-seo-plan-site"
+}

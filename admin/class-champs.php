@@ -93,7 +93,7 @@ final class Flib_SEO_Champs {
 				<textarea class="widefat" rows="3" id="flib-seo-desc" name="flib_seo[desc]" placeholder="<?php echo esc_attr( $auto ); ?>"><?php echo esc_textarea( $m( 'desc' ) ); ?></textarea>
 				<span class="description"><?php esc_html_e( 'Une ou deux phrases qui donnent envie de cliquer. Le texte trop long est coupé dans l’aperçu comme dans Google.', 'flib-seo' ); ?></span>
 			</p>
-			<details class="flib-seo-avance"<?php echo ( $m( 'noindex' ) || $m( 'canonique' ) || $m( 'image' ) ) ? ' open' : ''; ?>>
+			<details class="flib-seo-avance"<?php echo ( $m( 'noindex' ) || $m( 'canonique' ) || $m( 'image' ) || $m( 'plan_masque' ) ) ? ' open' : ''; ?>>
 				<summary><?php esc_html_e( 'Options avancées', 'flib-seo' ); ?></summary>
 				<p>
 					<?php if ( $exclu ) : ?>
@@ -106,6 +106,9 @@ final class Flib_SEO_Champs {
 					<?php else : ?>
 						<label><input type="checkbox" name="flib_seo[noindex]" value="1" <?php checked( (bool) $m( 'noindex' ) ); ?>> <?php esc_html_e( 'Masquer ce contenu de Google (noindex, retiré du plan du site et du llms.txt)', 'flib-seo' ); ?></label>
 					<?php endif; ?>
+				</p>
+				<p>
+					<label><input type="checkbox" name="flib_seo[plan_masque]" value="1" <?php checked( (bool) $m( 'plan_masque' ) ); ?>> <?php esc_html_e( 'Masquer du plan du site (page visiteurs seulement, toujours visible dans Google)', 'flib-seo' ); ?></label>
 				</p>
 				<p>
 					<label for="flib-seo-canonique"><?php esc_html_e( 'URL canonique', 'flib-seo' ); ?></label>
@@ -145,6 +148,7 @@ final class Flib_SEO_Champs {
 		self::meta( $f[0], $f[1], $post_id, 'noindex', empty( $d['noindex'] ) ? '' : '1' );
 		self::meta( $f[0], $f[1], $post_id, 'canonique', esc_url_raw( $d['canonique'] ?? '' ) );
 		self::meta( $f[0], $f[1], $post_id, 'image', absint( $d['image'] ?? 0 ) );
+		self::meta( $f[0], $f[1], $post_id, 'plan_masque', empty( $d['plan_masque'] ) ? '' : '1' );
 	}
 
 	/* ------------------------------------------------------------------ */

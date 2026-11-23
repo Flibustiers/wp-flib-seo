@@ -22,6 +22,7 @@ final class Flib_SEO_Contexte {
 			'noindex'   => 'string',
 			'canonique' => 'string',
 			'image'     => 'integer',
+			'plan_masque' => 'string',
 		);
 		foreach ( array_keys( Flib_SEO_Options::types() ) as $type ) {
 			foreach ( $types as $cle => $t ) {

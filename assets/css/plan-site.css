@@ -1,0 +1,23 @@
+/* Plan du site Flib'SEO : colonnes réglables, la charte vient du thème. */
+.flib-plan-site {
+	display: grid;
+	grid-template-columns: repeat(var(--flib-plan-colonnes, 1), minmax(0, 1fr));
+	gap: var(--wp--style--block-gap, 2rem) 3rem;
+	align-items: start;
+}
+@media (max-width: 781px) {
+	.flib-plan-site {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+.flib-plan-site__titre {
+	margin-top: 0;
+}
+.flib-plan-site__liste,
+.flib-plan-site__liste ul {
+	margin: 0;
+	padding-left: 1.2em;
+}
+.flib-plan-site__liste li {
+	margin: 0.3em 0;
+}

@@ -9,6 +9,7 @@ Extension de référencement légère des Flibustiers, en remplacement de Yoast.
 | Titres et descriptions | Modèles par défaut (`%titre% %sep% %site%`…), accueil, image de partage par défaut. Chaque contenu et chaque terme a ses propres champs, avec aperçu Google. |
 | Indexation | Types et taxonomies à ne pas indexer, archives d'auteur / de date, pages de médias, redirection des anciens plans du site Yoast. |
 | Entreprise | Données structurées LocalBusiness : type, coordonnées (reprises des Réglages du site de flib-base si vides), zone d'intervention, horaires, réseaux ; FAQ et articles. |
+| Plan du site | Page « Plan du site » pour les visiteurs : bloc ou shortcode `[flib_plan_site]`, contenus et taxonomies au choix, exclusions, colonnes. |
 | Fil d'Ariane | Bloc « Fil d'Ariane » et shortcode `[flib_fil_ariane]`, réglages par défaut, aperçu. |
 | IA (GEO) | Robots des moteurs de réponse IA et de l'entraînement dans le robots.txt, fichier `/llms.txt`. |
 | Redirections | 301 / 302 / 410, jokers `*`, import en masse depuis un tableur, journal des 404. |
@@ -26,6 +27,10 @@ Extension de référencement légère des Flibustiers, en remplacement de Yoast.
 - Thème à blocs : Apparence › Éditeur › Modèles, insérer le bloc « Fil d'Ariane » dans les gabarits voulus.
 - Ailleurs : `[flib_fil_ariane sep="/" accueil="Accueil" courant="non" prefixe="Vous êtes ici :" class="ma-classe"]`.
 - Le balisage `BreadcrumbList` est présent sur toutes les pages, fil affiché ou non.
+
+## Plan du site visiteurs
+
+`[flib_plan_site types="service,page,post" taxonomies="category" ordre="service,page,post" regrouper="oui" tri="titre" libelles="post:Nos actualités" exclure="12,34" exclure_termes="interne" articles="20" colonnes="3" titres="non" niveau="3" class="ma-classe"]` — attributs absents : réglages de l'onglet. Un contenu se masque aussi au cas par cas (« Masquer du plan du site » dans le panneau Référencement), sans toucher à son indexation.
 
 ## Mises à jour
 

@@ -1,0 +1,35 @@
+/* Fil d'Ariane Flib'SEO : volontairement minimal, la charte vient du thème. */
+.flib-fil-ariane {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	font-size: var(--wp--preset--font-size--small, 0.875rem);
+}
+.flib-fil-ariane__liste {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0 0.4em;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.flib-fil-ariane__item {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	margin: 0;
+}
+.flib-fil-ariane__sep {
+	opacity: 0.6;
+}
+.flib-fil-ariane__prefixe {
+	margin-right: 0.4em;
+}
+.flib-fil-ariane a {
+	text-decoration: none;
+}
+.flib-fil-ariane a:hover,
+.flib-fil-ariane a:focus-visible {
+	text-decoration: underline;
+}

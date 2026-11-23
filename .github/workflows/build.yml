@@ -1,0 +1,82 @@
+name: Contrôle et release
+
+# - Chaque push / pull request : syntaxe PHP (8.1 à 8.4) et JavaScript.
+# - Push sur main : si la version n'a pas encore de release, construit flib-seo.zip
+#   (dossier racine « flib-seo ») et crée le tag vX.Y.Z + la release.
+#   Publier une version = monter les 4 numéros (voir CLAUDE.md) et pousser sur main.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.1', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Lint PHP
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+      - name: Lint JS
+        run: for f in assets/js/*.js; do node --check "$f"; done
+
+  release:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Versions
+        id: version
+        run: |
+          head=$(sed -n -E 's/^[[:space:]*]*Version:[[:space:]]*([^[:space:]]+).*/\1/p' flib-seo.php | head -1)
+          const=$(sed -n -E "s/^define\([[:space:]]*'FLIB_SEO_VERSION',[[:space:]]*'([^']+)'[[:space:]]*\);.*/\1/p" flib-seo.php)
+          stable=$(sed -n -E 's/^Stable tag:[[:space:]]*([^[:space:]]+).*/\1/p' readme.txt)
+          echo "En-tête $head / constante $const / Stable tag $stable"
+          [[ -n "$head" && "$head" == "$const" && "$head" == "$stable" ]] || { echo "::error::Les numéros de version ne concordent pas."; exit 1; }
+          grep -q "^= $head =" readme.txt || { echo "::error::Section Changelog $head absente de readme.txt."; exit 1; }
+          echo "version=$head" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$head" >/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Construction de flib-seo.zip
+        if: steps.version.outputs.exists == 'false' || github.event_name == 'workflow_dispatch'
+        run: |
+          mkdir -p build/flib-seo
+          rsync -a --exclude='.git' --exclude='README.md' --exclude='.github' --exclude='build' --exclude='*.zip' \
+            --exclude='.gitignore' --exclude='.gitattributes' --exclude='node_modules' \
+            --exclude='CLAUDE.md' ./ build/flib-seo/
+          (cd build && zip -r -9 -q ../flib-seo.zip flib-seo)
+          unzip -l flib-seo.zip
+          # Pare-feu (Cloudflare WAF) : du PHP en clair dans le zip bloque le téléversement.
+          if LC_ALL=C grep -a -q -i '<?php' flib-seo.zip; then
+            echo "::error::Du PHP apparaît en clair dans le zip (fichier trop petit, non compressé)."
+            unzip -v flib-seo.zip | awk '$2=="Stored" && $1>0 {print $NF}'
+            exit 1
+          fi
+          awk -v v="${{ steps.version.outputs.version }}" '$0 ~ "^## "v { on=1; next } on && /^## / { exit } on { print }' CHANGELOG.md > notes.md
+          [[ -s notes.md ]] || echo "Voir le changelog de readme.txt." > notes.md
+      - name: Publication
+        if: steps.version.outputs.exists == 'false' || github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: flib-seo ${{ steps.version.outputs.version }}
+          body_path: notes.md
+          files: flib-seo.zip

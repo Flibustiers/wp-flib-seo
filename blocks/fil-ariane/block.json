@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "flib-seo/fil-ariane",
+	"title": "Fil d’Ariane",
+	"category": "theme",
+	"icon": "arrow-right-alt2",
+	"description": "Chemin de la page visitée (Accueil › Rubrique › Page). À poser une fois dans les gabarits.",
+	"keywords": [ "fil d'ariane", "breadcrumb", "chemin", "seo" ],
+	"textdomain": "flib-seo",
+	"attributes": {
+		"separateur": { "type": "string", "default": "" },
+		"accueil": { "type": "string", "default": "" },
+		"prefixe": { "type": "string", "default": "" },
+		"courant": { "type": "string", "enum": [ "defaut", "oui", "non" ], "default": "defaut" }
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"color": { "text": true, "background": true, "link": true },
+		"typography": { "fontSize": true, "lineHeight": true },
+		"spacing": { "margin": true, "padding": true }
+	},
+	"editorScript": "flib-seo-fil-ariane-editeur",
+	"style": "flib-seo-fil-ariane"
+}

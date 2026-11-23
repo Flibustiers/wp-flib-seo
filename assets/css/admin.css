@@ -1,0 +1,122 @@
+/* Flib'SEO, administration. */
+.flib-seo-encart {
+	max-width: 900px;
+	margin: 16px 0;
+	padding: 12px 20px;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+}
+.flib-seo-encart summary {
+	cursor: pointer;
+}
+.flib-seo-apercu-ariane {
+	padding: 12px 16px;
+	background: #f6f7f7;
+	border-radius: 4px;
+}
+.flib-seo-copier {
+	position: relative;
+	cursor: copy;
+}
+.flib-seo-copier[data-copie]::after {
+	content: attr(data-copie);
+	position: absolute;
+	top: -24px;
+	left: 0;
+	padding: 2px 6px;
+	font-family: sans-serif;
+	font-size: 11px;
+	color: #fff;
+	background: #1d2327;
+	border-radius: 3px;
+}
+.flib-seo-table {
+	max-width: 1100px;
+	margin-bottom: 16px;
+}
+.flib-seo-table form {
+	margin: 0;
+}
+.flib-seo-ajout input[type="text"] {
+	vertical-align: middle;
+}
+.flib-seo-image img {
+	display: block;
+	max-width: 240px;
+	max-height: 140px;
+	margin-bottom: 8px;
+	border: 1px solid #dcdcde;
+}
+
+/* Aperçu Google (largeur ~600 px comme sur ordinateur : le titre trop long est coupé). */
+.flib-seo-apercu {
+	max-width: 600px;
+	margin: 4px 0 16px;
+	padding: 12px 16px;
+	font-family: Arial, sans-serif;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+}
+.flib-seo-apercu__url {
+	overflow: hidden;
+	font-size: 12px;
+	color: #4d5156;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.flib-seo-apercu__titre {
+	overflow: hidden;
+	margin: 4px 0;
+	font-size: 20px;
+	line-height: 1.3;
+	color: #1a0dab;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.flib-seo-apercu__desc {
+	display: -webkit-box;
+	overflow: hidden;
+	font-size: 14px;
+	line-height: 1.58;
+	color: #4d5156;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+.flib-seo-avance summary {
+	margin: 8px 0;
+	cursor: pointer;
+	font-weight: 600;
+}
+
+/* Panneau de l'éditeur de blocs. */
+.flib-seo-panneau .flib-seo-apercu {
+	padding: 10px 12px;
+}
+.flib-seo-panneau .flib-seo-apercu__titre {
+	font-size: 16px;
+	white-space: normal;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+.flib-seo-panneau .flib-seo-apercu__desc {
+	font-size: 13px;
+	-webkit-line-clamp: 3;
+}
+.flib-seo-panneau .components-base-control {
+	margin-bottom: 16px;
+}
+.flib-seo-panneau__label {
+	margin: 8px 0 6px;
+	font-size: 11px;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+.flib-seo-panneau__image {
+	display: block;
+	max-width: 100%;
+	margin-bottom: 8px;
+	border-radius: 2px;
+}
